@@ -11,11 +11,14 @@ lerna-debug.log*
 dist
 dist-ssr
 *.local
-.env.example
+.env
 PROJECT_SUMMARY.md
 QUICKSTART.md
 ADMIN_GUIDE.md
 IMPROVEMENTS.md
+API_INTEGRATION_GUIDE.md
+PROJECT_FEATURES.md
+USER_MANUAL.md
 
 # Editor directories and files
 .vscode/*

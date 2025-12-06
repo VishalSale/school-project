@@ -7,15 +7,28 @@ const ImageUpload = ({ value, onChange, label = "Upload Image" }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFileSelect = (file) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target.result;
-        setPreview(imageUrl);
-        onChange(imageUrl);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file (PNG, JPG, GIF)');
+      return;
     }
+
+    // Validate file size (10MB limit)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      alert('Image size must be less than 10MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target.result;
+      setPreview(imageUrl);
+      onChange(imageUrl);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleFileChange = (e) => {
@@ -56,6 +69,7 @@ const ImageUpload = ({ value, onChange, label = "Upload Image" }) => {
             type="button"
             className="remove-image"
             onClick={removeImage}
+            aria-label="Remove image"
           >
             <X size={16} />
           </button>

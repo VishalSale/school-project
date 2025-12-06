@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Trash2, X } from 'lucide-react';
 import ImageUpload from '../common/ImageUpload';
 
 const GalleryManager = () => {
   const { galleryData, setGalleryData } = useData();
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -25,12 +27,14 @@ const GalleryManager = () => {
     };
     
     setGalleryData([...galleryData, newImage]);
+    showToast('Image uploaded successfully!', 'success');
     resetForm();
   };
 
   const handleDelete = (id) => {
     if (confirm('Are you sure you want to delete this image?')) {
       setGalleryData(galleryData.filter(item => item.id !== id));
+      showToast('Image deleted successfully!', 'success');
     }
   };
 

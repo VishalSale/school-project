@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Edit, Trash2, CheckCircle, X } from 'lucide-react';
 
 const AnnouncementsManager = () => {
   const { announcementsData, setAnnouncementsData } = useData();
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -23,6 +25,7 @@ const AnnouncementsManager = () => {
           ? { ...item, ...formData }
           : item
       ));
+      showToast('Announcement updated successfully!', 'success');
     } else {
       // Create new
       const newAnnouncement = {
@@ -31,6 +34,7 @@ const AnnouncementsManager = () => {
         date: new Date().toISOString().split('T')[0]
       };
       setAnnouncementsData([...announcementsData, newAnnouncement]);
+      showToast('Announcement created successfully!', 'success');
     }
     
     resetForm();
@@ -51,6 +55,7 @@ const AnnouncementsManager = () => {
   const handleDelete = (id) => {
     if (confirm('Are you sure you want to delete this announcement?')) {
       setAnnouncementsData(announcementsData.filter(item => item.id !== id));
+      showToast('Announcement deleted successfully!', 'success');
     }
   };
 

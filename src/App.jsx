@@ -3,6 +3,7 @@ import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import ScrollToTop from './components/common/ScrollToTop';
 import ScrollToTopButton from './components/common/ScrollToTopButton';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import Home from './pages/Home';
 import About from './pages/About';
 import Admissions from './pages/Admissions';
@@ -17,6 +18,7 @@ import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
+import { ToastProvider } from './context/ToastContext';
 
 function AppContent() {
   const location = useLocation();
@@ -49,14 +51,18 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <DataProvider>
-        <Router>
-          <ScrollToTop />
-          <AppContent />
-        </Router>
-      </DataProvider>
-    </AuthProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <AuthProvider>
+          <DataProvider>
+            <Router>
+              <ScrollToTop />
+              <AppContent />
+            </Router>
+          </DataProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
 

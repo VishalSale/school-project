@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Edit, Trash2, X, Mail, Award } from 'lucide-react';
 import ImageUpload from '../common/ImageUpload';
 
 const FacultyManager = () => {
   const { facultyData, setFacultyData } = useData();
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -23,9 +25,11 @@ const FacultyManager = () => {
       setFacultyData(facultyData.map(item =>
         item.id === editingId ? { ...item, ...formData } : item
       ));
+      showToast('Faculty member updated successfully!', 'success');
     } else {
       const newMember = { id: Date.now(), ...formData };
       setFacultyData([...facultyData, newMember]);
+      showToast('Faculty member added successfully!', 'success');
     }
     
     resetForm();
@@ -48,6 +52,7 @@ const FacultyManager = () => {
   const handleDelete = (id) => {
     if (confirm('Are you sure you want to delete this faculty member?')) {
       setFacultyData(facultyData.filter(item => item.id !== id));
+      showToast('Faculty member deleted successfully!', 'success');
     }
   };
 

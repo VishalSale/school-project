@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Edit, Trash2, X, Eye, EyeOff } from 'lucide-react';
 import ImageUpload from '../common/ImageUpload';
 
 const BlogManager = () => {
   const { blogData, setBlogData } = useData();
+  const { showToast } = useToast();
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
@@ -26,6 +28,7 @@ const BlogManager = () => {
           ? { ...item, ...formData }
           : item
       ));
+      showToast('Blog post updated successfully!', 'success');
     } else {
       const newPost = {
         id: Date.now(),
@@ -33,6 +36,7 @@ const BlogManager = () => {
         date: new Date().toISOString().split('T')[0]
       };
       setBlogData([...blogData, newPost]);
+      showToast('Blog post created successfully!', 'success');
     }
     
     resetForm();
@@ -56,15 +60,21 @@ const BlogManager = () => {
   const handleDelete = (id) => {
     if (confirm('Are you sure you want to delete this post?')) {
       setBlogData(blogData.filter(item => item.id !== id));
+      showToast('Blog post deleted successfully!', 'success');
     }
   };
 
   const togglePublish = (id) => {
+    const post = blogData.find(item => item.id === id);
     setBlogData(blogData.map(item =>
       item.id === id
         ? { ...item, published: !item.published }
         : item
     ));
+    showToast(
+      post.published ? 'Post unpublished' : 'Post published',
+      'info'
+    );
   };
 
   const resetForm = () => {

@@ -35,7 +35,6 @@ const Footer = () => {
               <li><Link to="/announcements">Announcements</Link></li>
               <li><Link to="/gallery">Gallery</Link></li>
               <li><Link to="/contact">Contact Us</Link></li>
-              <li><Link to="/login">Student Portal</Link></li>
             </ul>
           </div>
 

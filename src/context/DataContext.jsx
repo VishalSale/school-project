@@ -312,6 +312,61 @@ export const DataProvider = ({ children }) => {
     localStorage.setItem('blogData', JSON.stringify(blogData));
   }, [blogData]);
 
+  // CBSE Disclosure Data
+  const [cbseData, setCbseData] = useState(() =>
+    getInitialData('cbseData', {
+      generalInfo: {
+        schoolName: 'Bright Future School',
+        affiliationNo: '1234567',
+        schoolCode: '12345',
+        address: '123 Education Street, City, State - 12345',
+        principalName: 'Dr. Sarah Johnson',
+        principalQualification: 'Ph.D. in Education',
+        email: 'principal@brightfuture.edu',
+        contactNumber: '+91 123 456 7890',
+        campusArea: '5 Acres'
+      },
+      staffDetails: {
+        totalTeaching: '100',
+        pgt: '25',
+        tgt: '40',
+        prt: '35',
+        nonTeaching: '50'
+      },
+      feeStructure: {
+        class1to5: '50000',
+        class6to8: '60000',
+        class9to10: '70000',
+        class11to12: '80000'
+      },
+      documents: [
+        { id: 1, name: 'CBSE Affiliation Certificate', url: '#' },
+        { id: 2, name: 'Society Registration Certificate', url: '#' },
+        { id: 3, name: 'No Objection Certificate (NOC)', url: '#' },
+        { id: 4, name: 'Recognition Certificate', url: '#' },
+        { id: 5, name: 'Building Safety Certificate', url: '#' },
+        { id: 6, name: 'Fire Safety Certificate', url: '#' },
+        { id: 7, name: 'DEO Certificate', url: '#' },
+        { id: 8, name: 'Annual Report', url: '#' }
+      ],
+      infrastructure: [
+        { id: 1, item: 'Number of Classrooms', value: '60' },
+        { id: 2, item: 'Science Labs', value: '5' },
+        { id: 3, item: 'Computer Labs', value: '3' },
+        { id: 4, item: 'Library', value: 'Yes (10,000+ books)' },
+        { id: 5, item: 'Playground', value: 'Yes' },
+        { id: 6, item: 'Sports Facilities', value: 'Cricket, Football, Basketball' },
+        { id: 7, item: 'Medical Room', value: 'Yes' },
+        { id: 8, item: 'Auditorium', value: 'Yes (500 capacity)' },
+        { id: 9, item: 'Transport', value: 'Yes (20 buses)' }
+      ]
+    })
+  );
+
+  useEffect(() => {
+    localStorage.setItem('cbseData', JSON.stringify(cbseData));
+  }, [cbseData]);
+
   const value = {
     // Admissions
     admissionsData,
@@ -335,7 +390,11 @@ export const DataProvider = ({ children }) => {
     
     // Blog
     blogData,
-    setBlogData
+    setBlogData,
+    
+    // CBSE Disclosure
+    cbseData,
+    setCbseData
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Bell, FileText, GraduationCap, Users, Image, Calendar, Menu, X } from 'lucide-react';
+import { LogOut, Bell, FileText, GraduationCap, Users, Image, Calendar, Menu, X, Building } from 'lucide-react';
 import AdmissionsManager from '../components/admin/AdmissionsManager';
 import AcademicsManager from '../components/admin/AcademicsManager';
 import FacultyManager from '../components/admin/FacultyManager';
 import GalleryManager from '../components/admin/GalleryManager';
 import AnnouncementsManager from '../components/admin/AnnouncementsManager';
 import BlogManager from '../components/admin/BlogManager';
+import CBSEManager from '../components/admin/CBSEManager';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -46,6 +47,8 @@ const AdminDashboard = () => {
         return <FacultyManager />;
       case 'gallery':
         return <GalleryManager />;
+      case 'cbse':
+        return <CBSEManager />;
       default:
         return <AnnouncementsManager />;
     }
@@ -119,6 +122,13 @@ const AdminDashboard = () => {
           >
             <Image size={20} />
             <span>Gallery</span>
+          </button>
+          <button
+            className={activeTab === 'cbse' ? 'active' : ''}
+            onClick={() => handleTabChange('cbse')}
+          >
+            <Building size={20} />
+            <span>CBSE Disclosure</span>
           </button>
           <button onClick={handleLogout} className="logout-btn">
             <LogOut size={20} />

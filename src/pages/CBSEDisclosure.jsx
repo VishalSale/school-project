@@ -1,7 +1,17 @@
+import { useData } from '../context/DataContext';
 import { FileText, Building, Users, Award } from 'lucide-react';
 import './CBSEDisclosure.css';
 
 const CBSEDisclosure = () => {
+  const { cbseData } = useData();
+  const { 
+    generalInfo = {}, 
+    staffDetails = {}, 
+    feeStructure = {}, 
+    documents = [], 
+    infrastructure = [] 
+  } = cbseData || {};
+
   return (
     <div className="cbse-page">
       <section className="page-header">
@@ -23,35 +33,35 @@ const CBSEDisclosure = () => {
               <div className="info-grid">
                 <div className="info-item">
                   <strong>School Name:</strong>
-                  <span>Bright Future School</span>
+                  <span>{generalInfo.schoolName}</span>
                 </div>
                 <div className="info-item">
                   <strong>Affiliation No:</strong>
-                  <span>1234567</span>
+                  <span>{generalInfo.affiliationNo}</span>
                 </div>
                 <div className="info-item">
                   <strong>School Code:</strong>
-                  <span>12345</span>
+                  <span>{generalInfo.schoolCode}</span>
                 </div>
                 <div className="info-item">
                   <strong>Complete Address:</strong>
-                  <span>123 Education Street, City, State - 12345</span>
+                  <span>{generalInfo.address}</span>
                 </div>
                 <div className="info-item">
                   <strong>Principal Name:</strong>
-                  <span>Dr. Sarah Johnson</span>
+                  <span>{generalInfo.principalName}</span>
                 </div>
                 <div className="info-item">
                   <strong>Principal Qualification:</strong>
-                  <span>Ph.D. in Education</span>
+                  <span>{generalInfo.principalQualification}</span>
                 </div>
                 <div className="info-item">
                   <strong>Email:</strong>
-                  <span>principal@brightfuture.edu</span>
+                  <span>{generalInfo.email}</span>
                 </div>
                 <div className="info-item">
                   <strong>Contact Number:</strong>
-                  <span>+91 123 456 7890</span>
+                  <span>{generalInfo.contactNumber}</span>
                 </div>
               </div>
             </div>
@@ -63,38 +73,17 @@ const CBSEDisclosure = () => {
                 <h2>Documents & Certificates</h2>
               </div>
               <div className="documents-list">
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>CBSE Affiliation Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>Society Registration Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>No Objection Certificate (NOC)</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>Recognition Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>Building Safety Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>Fire Safety Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>DEO Certificate</span>
-                </a>
-                <a href="#" className="document-link">
-                  <FileText size={20} />
-                  <span>Annual Report</span>
-                </a>
+                {documents.map((doc) => (
+                  <div key={doc.id} className="document-card">
+                    <div className="document-image">
+                      <img src={doc.url} alt={doc.name} />
+                    </div>
+                    <div className="document-info">
+                      <FileText size={20} />
+                      <span>{doc.name}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -107,23 +96,23 @@ const CBSEDisclosure = () => {
               <div className="info-grid">
                 <div className="info-item">
                   <strong>Total Teaching Staff:</strong>
-                  <span>100</span>
+                  <span>{staffDetails.totalTeaching}</span>
                 </div>
                 <div className="info-item">
                   <strong>PGT:</strong>
-                  <span>25</span>
+                  <span>{staffDetails.pgt}</span>
                 </div>
                 <div className="info-item">
                   <strong>TGT:</strong>
-                  <span>40</span>
+                  <span>{staffDetails.tgt}</span>
                 </div>
                 <div className="info-item">
                   <strong>PRT:</strong>
-                  <span>35</span>
+                  <span>{staffDetails.prt}</span>
                 </div>
                 <div className="info-item">
                   <strong>Non-Teaching Staff:</strong>
-                  <span>50</span>
+                  <span>{staffDetails.nonTeaching}</span>
                 </div>
               </div>
             </div>
@@ -135,16 +124,12 @@ const CBSEDisclosure = () => {
                 <h2>Infrastructure & Facilities</h2>
               </div>
               <div className="facilities-grid">
-                <div className="facility-item">Total Campus Area: 5 Acres</div>
-                <div className="facility-item">Number of Classrooms: 60</div>
-                <div className="facility-item">Science Labs: 5</div>
-                <div className="facility-item">Computer Labs: 3</div>
-                <div className="facility-item">Library: Yes (10,000+ books)</div>
-                <div className="facility-item">Playground: Yes</div>
-                <div className="facility-item">Sports Facilities: Cricket, Football, Basketball</div>
-                <div className="facility-item">Medical Room: Yes</div>
-                <div className="facility-item">Auditorium: Yes (500 capacity)</div>
-                <div className="facility-item">Transport: Yes (20 buses)</div>
+                <div className="facility-item">Total Campus Area: {generalInfo.campusArea}</div>
+                {infrastructure.map((item) => (
+                  <div key={item.id} className="facility-item">
+                    {item.item}: {item.value}
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -157,19 +142,19 @@ const CBSEDisclosure = () => {
               <div className="fee-table">
                 <div className="fee-row">
                   <span>Classes 1-5</span>
-                  <span>₹50,000</span>
+                  <span>₹{parseInt(feeStructure.class1to5).toLocaleString('en-IN')}</span>
                 </div>
                 <div className="fee-row">
                   <span>Classes 6-8</span>
-                  <span>₹60,000</span>
+                  <span>₹{parseInt(feeStructure.class6to8).toLocaleString('en-IN')}</span>
                 </div>
                 <div className="fee-row">
                   <span>Classes 9-10</span>
-                  <span>₹70,000</span>
+                  <span>₹{parseInt(feeStructure.class9to10).toLocaleString('en-IN')}</span>
                 </div>
                 <div className="fee-row">
                   <span>Classes 11-12</span>
-                  <span>₹80,000</span>
+                  <span>₹{parseInt(feeStructure.class11to12).toLocaleString('en-IN')}</span>
                 </div>
               </div>
             </div>

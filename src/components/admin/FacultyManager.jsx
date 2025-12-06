@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
 import { Plus, Edit, Trash2, X, Mail, Award } from 'lucide-react';
+import ImageUpload from '../common/ImageUpload';
 
 const FacultyManager = () => {
   const { facultyData, setFacultyData } = useData();
@@ -41,6 +42,7 @@ const FacultyManager = () => {
     });
     setEditingId(member.id);
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (id) => {
@@ -133,17 +135,11 @@ const FacultyManager = () => {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Image URL *</label>
-              <input
-                type="url"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                placeholder="https://example.com/photo.jpg"
-                required
-              />
-              <small>Use placeholder: https://via.placeholder.com/300x300/2563eb/ffffff?text=Initials</small>
-            </div>
+            <ImageUpload 
+              value={formData.image} 
+              onChange={(imageUrl) => setFormData({...formData, image: imageUrl})}
+              label="Upload Faculty Photo *"
+            />
 
             <div className="form-actions">
               <button type="submit" className="btn btn-primary">

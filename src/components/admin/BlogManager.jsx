@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
 import { Plus, Edit, Trash2, X, Eye, EyeOff } from 'lucide-react';
+import ImageUpload from '../common/ImageUpload';
 
 const BlogManager = () => {
   const { blogData, setBlogData } = useData();
@@ -49,6 +50,7 @@ const BlogManager = () => {
     });
     setEditingId(post.id);
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (id) => {
@@ -128,16 +130,11 @@ const BlogManager = () => {
               </div>
             </div>
 
-            <div className="form-group">
-              <label>Image URL *</label>
-              <input
-                type="url"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                placeholder="https://example.com/image.jpg"
-                required
-              />
-            </div>
+            <ImageUpload 
+              value={formData.image} 
+              onChange={(imageUrl) => setFormData({...formData, image: imageUrl})}
+              label="Upload Post Image *"
+            />
 
             <div className="form-group">
               <label>Excerpt (Short Summary) *</label>

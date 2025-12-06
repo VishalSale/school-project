@@ -5,6 +5,7 @@
   justify-content: center;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   padding: 20px;
+  padding-top: 80px;
 }
 
 .login-container {

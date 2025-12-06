@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
 import { Plus, Trash2, X } from 'lucide-react';
+import ImageUpload from '../common/ImageUpload';
 
 const GalleryManager = () => {
   const { galleryData, setGalleryData } = useData();
@@ -81,17 +82,11 @@ const GalleryManager = () => {
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Image URL *</label>
-              <input
-                type="url"
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                placeholder="https://example.com/image.jpg"
-                required
-              />
-              <small>Use placeholder: https://via.placeholder.com/400x300/2563eb/ffffff?text=Title</small>
-            </div>
+            <ImageUpload 
+              value={formData.url} 
+              onChange={(imageUrl) => setFormData({...formData, url: imageUrl})}
+              label="Upload Gallery Image *"
+            />
 
             <div className="form-actions">
               <button type="submit" className="btn btn-primary">Upload</button>

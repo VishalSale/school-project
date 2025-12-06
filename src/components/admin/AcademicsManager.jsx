@@ -85,6 +85,7 @@ const AcademicsManager = () => {
     }
     setEditingId(item.id);
     setShowForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (id) => {

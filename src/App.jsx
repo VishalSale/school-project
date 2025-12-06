@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import ScrollToTop from './components/common/ScrollToTop';
@@ -18,33 +18,42 @@ import AdminDashboard from './pages/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
 
+function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname === '/admin';
+
+  return (
+    <div className="app">
+      {!isAdminRoute && <Header />}
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/admissions" element={<Admissions />} />
+          <Route path="/academics" element={<Academics />} />
+          <Route path="/faculty" element={<Faculty />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/cbse-disclosure" element={<CBSEDisclosure />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
+      </main>
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <ScrollToTopButton />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
       <DataProvider>
         <Router>
           <ScrollToTop />
-          <div className="app">
-            <Header />
-            <main>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/admissions" element={<Admissions />} />
-                <Route path="/academics" element={<Academics />} />
-                <Route path="/faculty" element={<Faculty />} />
-                <Route path="/gallery" element={<Gallery />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/announcements" element={<Announcements />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/cbse-disclosure" element={<CBSEDisclosure />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<AdminDashboard />} />
-              </Routes>
-            </main>
-            <Footer />
-            <ScrollToTopButton />
-          </div>
+          <AppContent />
         </Router>
       </DataProvider>
     </AuthProvider>

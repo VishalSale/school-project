@@ -77,6 +77,9 @@ Server will run on `http://localhost:5000`
 http://localhost:5000/api
 ```
 
+### Complete API Reference
+See **[API_ENDPOINTS.md](./API_ENDPOINTS.md)** for complete list of all 70+ endpoints.
+
 ### Authentication
 Most endpoints require JWT token in Authorization header:
 ```

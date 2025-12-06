@@ -2,7 +2,9 @@ const db = require('../config/database');
 
 const getAll = async (req, res, next) => {
   try {
-    const faculty = await db('faculty').orderBy('created_at', 'desc');
+    const faculty = await db('faculty')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: faculty });
   } catch (error) {
     next(error);
@@ -35,6 +37,10 @@ const create = async (req, res, next) => {
       experience,
       email,
       image,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newMember = await db('faculty').where({ id }).first();

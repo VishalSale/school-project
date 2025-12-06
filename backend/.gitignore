@@ -39,3 +39,10 @@ coverage/
 # Temporary files
 tmp/
 temp/
+
+# Documents
+API_ENDPOINTS.md
+BACKEND_COMPLETE.md
+AUDIT_FIELDS_GUIDE.md
+AUDIT_IMPLEMENTATION_SUMMARY.md
+FIXES_APPLIED.md

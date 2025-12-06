@@ -5,7 +5,9 @@ const getAllPosts = async (req, res, next) => {
   try {
     const { published } = req.query;
     
-    let query = db('blog').orderBy('date', 'desc');
+    let query = db('blog')
+      .whereNot({ status: 'deleted' }) // Exclude soft-deleted items
+      .orderBy('date', 'desc');
     
     // If not admin, only show published posts
     if (!req.user || published === 'true') {
@@ -60,6 +62,11 @@ const createPost = async (req, res, next) => {
       excerpt,
       content,
       published: published || false,
+      // Audit fields
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newPost = await db('blog').where({ id }).first();
@@ -99,6 +106,10 @@ const updatePost = async (req, res, next) => {
       content,
       published,
       updated_at: db.fn.now(),
+      // Audit fields
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedPost = await db('blog').where({ id }).first();
@@ -113,7 +124,7 @@ const updatePost = async (req, res, next) => {
   }
 };
 
-// Delete blog post (admin only)
+// Delete blog post (admin only) - Soft delete
 const deletePost = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -127,7 +138,14 @@ const deletePost = async (req, res, next) => {
       });
     }
 
-    await db('blog').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('blog').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

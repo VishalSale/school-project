@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 import './Contact.css';
 
 const Contact = () => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,9 +31,11 @@ const Contact = () => {
       // await axios.post('/api/contact', formData);
       
       setSubmitStatus('success');
+      showToast('Message sent successfully! We\'ll get back to you soon.', 'success');
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     } catch (error) {
       setSubmitStatus('error');
+      showToast('Failed to send message. Please try again.', 'error');
     }
   };
 
@@ -161,7 +165,7 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary btn-send-message">
                   <Send size={20} />
                   <span>Send Message</span>
                 </button>

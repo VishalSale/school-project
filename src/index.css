@@ -72,7 +72,6 @@ main {
 
 .btn-primary:hover {
   background: #1d4ed8;
-  transform: translateY(-2px);
 }
 
 .btn-secondary {
@@ -93,6 +92,15 @@ main {
 .btn-outline:hover {
   background: var(--primary-color);
   color: white;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
 }
 
 /* Section Styles */

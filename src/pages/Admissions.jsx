@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 import { FileText, Calendar, CheckCircle, AlertCircle } from 'lucide-react';
 import './Admissions.css';
 
 const Admissions = () => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     studentName: '',
     dob: '',
@@ -37,6 +39,7 @@ const Admissions = () => {
       // const response = await axios.post('/api/admissions', formData);
       
       setSubmitStatus('success');
+      showToast('Application submitted successfully! We\'ll contact you soon.', 'success');
       setFormData({
         studentName: '',
         dob: '',
@@ -51,6 +54,7 @@ const Admissions = () => {
       });
     } catch (error) {
       setSubmitStatus('error');
+      showToast('Failed to submit application. Please try again.', 'error');
       console.error('Submission error:', error);
     }
   };
@@ -281,8 +285,9 @@ const Admissions = () => {
                 ></textarea>
               </div>
 
-              <button type="submit" className="btn btn-primary">
-                Submit Application
+              <button type="submit" className="btn btn-primary btn-submit-application">
+                <span className="btn-text">Submit Application</span>
+                <span className="btn-icon">→</span>
               </button>
             </form>
           </div>

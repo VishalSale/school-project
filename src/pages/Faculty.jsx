@@ -1,57 +1,9 @@
+import { useData } from '../context/DataContext';
 import { Mail, Award } from 'lucide-react';
 import './Faculty.css';
 
 const Faculty = () => {
-  const faculty = [
-    {
-      name: 'Dr. Sarah Johnson',
-      position: 'Principal',
-      qualification: 'Ph.D. in Education',
-      experience: '25 years',
-      email: 'principal@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/2563eb/ffffff?text=SJ'
-    },
-    {
-      name: 'Mr. Rajesh Kumar',
-      position: 'Vice Principal',
-      qualification: 'M.Ed., M.A.',
-      experience: '20 years',
-      email: 'vp@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/10b981/ffffff?text=RK'
-    },
-    {
-      name: 'Ms. Priya Sharma',
-      position: 'Mathematics Teacher',
-      qualification: 'M.Sc. Mathematics',
-      experience: '15 years',
-      email: 'priya@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/2563eb/ffffff?text=PS'
-    },
-    {
-      name: 'Mr. David Wilson',
-      position: 'Science Teacher',
-      qualification: 'M.Sc. Physics',
-      experience: '12 years',
-      email: 'david@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/10b981/ffffff?text=DW'
-    },
-    {
-      name: 'Ms. Anjali Verma',
-      position: 'English Teacher',
-      qualification: 'M.A. English',
-      experience: '10 years',
-      email: 'anjali@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/2563eb/ffffff?text=AV'
-    },
-    {
-      name: 'Mr. Michael Brown',
-      position: 'Computer Science Teacher',
-      qualification: 'M.Tech. CS',
-      experience: '8 years',
-      email: 'michael@brightfuture.edu',
-      image: 'https://via.placeholder.com/300x300/10b981/ffffff?text=MB'
-    }
-  ];
+  const { facultyData } = useData();
 
   return (
     <div className="faculty-page">
@@ -70,7 +22,7 @@ const Faculty = () => {
           </div>
 
           <div className="faculty-grid">
-            {faculty.map((member, index) => (
+            {facultyData.map((member, index) => (
               <div key={index} className="faculty-card">
                 <div className="faculty-image">
                   <img src={member.image} alt={member.name} />

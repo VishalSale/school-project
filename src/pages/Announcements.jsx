@@ -1,62 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useData } from '../context/DataContext';
 import { Bell, Calendar, Pin } from 'lucide-react';
 import './Announcements.css';
 
 const Announcements = () => {
-  const [announcements, setAnnouncements] = useState([]);
-
-  useEffect(() => {
-    // TODO: Fetch from API
-    // const fetchAnnouncements = async () => {
-    //   const response = await axios.get('/api/announcements');
-    //   setAnnouncements(response.data);
-    // };
-    // fetchAnnouncements();
-
-    // Mock data for now
-    setAnnouncements([
-      {
-        id: 1,
-        title: 'Annual Sports Day 2025',
-        date: '2025-02-15',
-        category: 'Event',
-        isPinned: true,
-        content: 'Annual Sports Day will be held on February 15, 2025. All students are requested to participate actively. Parents are invited to attend.'
-      },
-      {
-        id: 2,
-        title: 'Mid-Term Examination Schedule',
-        date: '2025-02-10',
-        category: 'Academic',
-        isPinned: true,
-        content: 'Mid-term examinations for all classes will commence from March 1, 2025. Detailed schedule will be shared with students.'
-      },
-      {
-        id: 3,
-        title: 'Parent-Teacher Meeting',
-        date: '2025-02-05',
-        category: 'Meeting',
-        isPinned: false,
-        content: 'Parent-Teacher meeting scheduled for February 20, 2025. Please check your email for appointment timings.'
-      },
-      {
-        id: 4,
-        title: 'Science Exhibition',
-        date: '2025-01-28',
-        category: 'Event',
-        isPinned: false,
-        content: 'Inter-school Science Exhibition will be organized on March 10, 2025. Students interested in participating should register by February 25.'
-      },
-      {
-        id: 5,
-        title: 'Holiday Notice',
-        date: '2025-01-20',
-        category: 'Holiday',
-        isPinned: false,
-        content: 'School will remain closed on February 26 (Mahashivratri) and March 8 (Holi). Classes will resume on March 11, 2025.'
-      }
-    ]);
-  }, []);
+  const { announcementsData } = useData();
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -73,8 +20,8 @@ const Announcements = () => {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
-  const pinnedAnnouncements = announcements.filter(a => a.isPinned);
-  const regularAnnouncements = announcements.filter(a => !a.isPinned);
+  const pinnedAnnouncements = announcementsData.filter(a => a.isPinned);
+  const regularAnnouncements = announcementsData.filter(a => !a.isPinned);
 
   return (
     <div className="announcements-page">

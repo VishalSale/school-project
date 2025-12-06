@@ -27,6 +27,7 @@ const Header = () => {
     { path: '/academics', label: 'Academics' },
     { path: '/faculty', label: 'Faculty' },
     { path: '/gallery', label: 'Gallery' },
+    { path: '/blog', label: 'News' },
     { path: '/announcements', label: 'Announcements' },
     { path: '/contact', label: 'Contact' },
   ];
@@ -36,8 +37,11 @@ const Header = () => {
       <div className="container">
         <div className="header-content">
           <Link to="/" className="logo">
-            <GraduationCap size={32} />
-            <span>Bright Future School</span>
+            <img 
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmq59fQshjU5x1LTBMHi5SDrILg-IgMEa0_aE6w4c2Cyjll6spUXaiklNymVqpA-HehAg&usqp=CAU" 
+              alt="Bright Future School" 
+              className="logo-image"
+            />
           </Link>
 
           <nav className={`nav ${isMenuOpen ? 'active' : ''}`}>
@@ -50,10 +54,11 @@ const Header = () => {
                 {link.label}
               </Link>
             ))}
-            <Link to="/login" className="btn btn-primary">
-              Login
-            </Link>
           </nav>
+
+          <Link to="/login" className="btn btn-primary login-btn">
+            Login
+          </Link>
 
           <button
             className="menu-toggle"

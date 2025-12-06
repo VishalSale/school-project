@@ -1,0 +1,141 @@
+.cbse-page {
+  margin-top: 70px;
+}
+
+.disclosure-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.disclosure-section {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-header svg {
+  color: var(--primary-color);
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  color: var(--dark-color);
+  margin: 0;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item strong {
+  color: var(--dark-color);
+  font-size: 0.95rem;
+}
+
+.info-item span {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.documents-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.document-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: var(--light-color);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  border-left: 3px solid var(--primary-color);
+}
+
+.document-link:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateX(5px);
+}
+
+.document-link:hover svg {
+  color: white;
+}
+
+.document-link svg {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.facility-item {
+  padding: 15px 20px;
+  background: var(--light-color);
+  border-radius: 8px;
+  color: var(--text-color);
+  border-left: 3px solid var(--secondary-color);
+}
+
+.fee-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: var(--light-color);
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.fee-row span:first-child {
+  color: var(--dark-color);
+}
+
+.fee-row span:last-child {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .disclosure-section {
+    padding: 25px 20px;
+  }
+
+  .info-grid,
+  .documents-list,
+  .facilities-grid {
+    grid-template-columns: 1fr;
+  }
+}

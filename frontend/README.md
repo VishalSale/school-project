@@ -1,211 +1,191 @@
-# Bright Future School Website
+# 🏫 School Website Frontend
 
-A modern, responsive school website built with React, featuring admin dashboard, online admissions, announcements, and more.
+A modern, responsive school website built with React and Vite. Works perfectly with or without a backend!
 
-## Features
+## ✨ Features
 
-### Public Pages
-- **Home**: Hero section, stats, features, and quick links
-- **About Us**: Mission, vision, history, and core values
-- **Admissions**: Online admission form with process details
-- **Academics**: Curriculum, class structure, and programs
-- **Faculty**: Staff profiles and qualifications
-- **Gallery**: Image gallery with category filters
-- **Contact**: Contact form with location map
-- **Announcements**: Latest school notices and events
-- **CBSE Disclosure**: Mandatory disclosure information
+- 📱 Fully responsive design
+- 🎨 Modern UI with smooth animations
+- 📊 Admin dashboard for content management
+- 💾 Works offline with localStorage
+- 🚀 Fast and optimized
+- 🔒 Secure authentication
+- 📸 Gallery management
+- 📢 Announcements system
+- 📝 Blog/News section
+- 📋 CBSE disclosure page
 
-### Admin Features
-- **Login System**: Secure authentication
-- **Admin Dashboard**: Manage announcements and news
-- **Content Management**: Create, edit, and delete posts
+## 🚀 Quick Start
 
-## Tech Stack
+### Development Mode (with backend)
 
-- **React 19** - UI library
-- **React Router** - Navigation
+```bash
+npm install
+npm run dev
+```
+
+Visit: `http://localhost:5173`
+
+### Production Mode (without backend)
+
+```bash
+npm install
+npm run build
+npm run preview
+```
+
+Visit: `http://localhost:4173`
+
+## 📦 Deploy to GitHub Pages
+
+### Option 1: Using Deploy Script (Easiest)
+
+**Windows:**
+```bash
+deploy.bat
+```
+
+**Mac/Linux:**
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+### Option 2: Manual Deploy
+
+```bash
+npm run build
+npm run deploy
+```
+
+Your site will be live at: `https://VishalSale.github.io/school-project`
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env` file:
+```env
+VITE_STATIC_MODE=false
+VITE_API_URL=http://localhost:3000/api
+VITE_SITE_NAME=Your School Name
+VITE_SITE_EMAIL=school@example.com
+VITE_SITE_PHONE=1234567890
+```
+
+For production (`.env.production`):
+```env
+VITE_STATIC_MODE=true
+VITE_SITE_NAME=Your School Name
+VITE_SITE_EMAIL=school@example.com
+VITE_SITE_PHONE=1234567890
+```
+
+## 🎯 Static Mode vs Backend Mode
+
+### Static Mode (Default for Production)
+- ✅ No backend required
+- ✅ Works on GitHub Pages
+- ✅ Data stored in localStorage
+- ✅ Perfect for demo/testing
+- ❌ No real authentication
+- ❌ No file uploads to server
+- ❌ No email notifications
+
+### Backend Mode (Development)
+- ✅ Real authentication
+- ✅ Database integration
+- ✅ File uploads
+- ✅ Email notifications
+- ✅ Multi-user support
+- ❌ Requires backend server
+
+## 🔐 Demo Admin Access
+
+For testing admin features:
+
+```
+Email: admin@school.com
+Password: admin123
+```
+
+## 📁 Project Structure
+
+```
+frontend/
+├── public/          # Static assets
+├── src/
+│   ├── components/  # React components
+│   ├── pages/       # Page components
+│   ├── context/     # React context (state management)
+│   ├── services/    # API services
+│   ├── utils/       # Utility functions
+│   ├── App.jsx      # Main app component
+│   └── main.jsx     # Entry point
+├── .env             # Development environment variables
+├── .env.production  # Production environment variables
+└── vite.config.js   # Vite configuration
+```
+
+## 🛠️ Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run deploy` - Deploy to GitHub Pages
+- `npm run lint` - Run ESLint
+
+## 📚 Tech Stack
+
+- **React 18** - UI library
+- **Vite** - Build tool
+- **React Router** - Routing
 - **Axios** - HTTP client
 - **Lucide React** - Icons
-- **CSS3** - Styling (fully responsive)
+- **CSS3** - Styling
 
-## Installation
+## 🐛 Troubleshooting
 
-1. **Install dependencies:**
-   ```bash
-   cd school-website
-   npm install
-   ```
+### App crashes on GitHub Pages
 
-2. **Start development server:**
-   ```bash
-   npm run dev
-   ```
+**Solution:** Make sure `.env.production` has `VITE_STATIC_MODE=true`
 
-3. **Build for production:**
-   ```bash
-   npm run build
-   ```
+### Blank page after deploy
 
-## Backend Integration
+**Solution:** Check `vite.config.js` base path matches your repo name
 
-### API Configuration
+### 404 on page refresh
 
-Update the API base URL in `src/services/api.js`:
+**Solution:** Already handled with HashRouter!
 
-```javascript
-const API_BASE_URL = 'https://your-backend-url.com/api';
-```
+### Changes not showing
 
-### Required API Endpoints
+**Solution:** Clear browser cache (Ctrl + Shift + Delete)
 
-#### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/logout` - User logout
+## 📖 Documentation
 
-#### Admissions
-- `POST /api/admissions` - Submit admission form
-- `GET /api/admissions` - Get all admissions (admin)
-- `GET /api/admissions/:id` - Get single admission
-- `PUT /api/admissions/:id` - Update admission
-- `DELETE /api/admissions/:id` - Delete admission
+- [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Detailed deployment instructions
+- [API Documentation](../backend/API_ENDPOINTS.md) - Backend API reference
 
-#### Announcements
-- `GET /api/announcements` - Get all announcements
-- `POST /api/announcements` - Create announcement (admin)
-- `PUT /api/announcements/:id` - Update announcement (admin)
-- `DELETE /api/announcements/:id` - Delete announcement (admin)
+## 🤝 Contributing
 
-#### Contact
-- `POST /api/contact` - Submit contact form
-- `GET /api/contact` - Get all messages (admin)
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-#### News
-- `GET /api/news` - Get all news
-- `POST /api/news` - Create news (admin)
-- `PUT /api/news/:id` - Update news (admin)
-- `DELETE /api/news/:id` - Delete news (admin)
+## 📄 License
 
-#### Gallery
-- `GET /api/gallery` - Get all images
-- `POST /api/gallery` - Upload image (admin)
-- `DELETE /api/gallery/:id` - Delete image (admin)
+This project is licensed under the MIT License.
 
-### Example API Response Format
+## 🆘 Support
 
-```javascript
-// Success Response
-{
-  "success": true,
-  "data": { ... },
-  "message": "Operation successful"
-}
-
-// Error Response
-{
-  "success": false,
-  "error": "Error message",
-  "message": "Detailed error description"
-}
-```
-
-## Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-REACT_APP_API_URL=http://localhost:5000/api
-REACT_APP_SITE_NAME=Bright Future School
-```
-
-## Customization
-
-### Branding
-1. Update school name in `src/components/common/Header.jsx`
-2. Update colors in `src/index.css` (CSS variables)
-3. Replace placeholder images with actual school photos
-
-### Colors
-Edit CSS variables in `src/index.css`:
-
-```css
-:root {
-  --primary-color: #2563eb;    /* Blue */
-  --secondary-color: #10b981;  /* Green */
-  --dark-color: #1e293b;       /* Dark Gray */
-  --light-color: #f8fafc;      /* Light Gray */
-  --text-color: #334155;       /* Text Gray */
-}
-```
-
-### Content
-- Update school information in respective page components
-- Modify form fields as needed
-- Add/remove navigation links in `Header.jsx`
-
-## Project Structure
-
-```
-school-website/
-├── public/
-├── src/
-│   ├── components/
-│   │   └── common/
-│   │       ├── Header.jsx
-│   │       ├── Header.css
-│   │       ├── Footer.jsx
-│   │       └── Footer.css
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   ├── Admissions.jsx
-│   │   ├── Academics.jsx
-│   │   ├── Faculty.jsx
-│   │   ├── Gallery.jsx
-│   │   ├── Contact.jsx
-│   │   ├── Announcements.jsx
-│   │   ├── CBSEDisclosure.jsx
-│   │   ├── Login.jsx
-│   │   └── AdminDashboard.jsx
-│   ├── context/
-│   │   └── AuthContext.jsx
-│   ├── services/
-│   │   └── api.js
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
-├── package.json
-└── README.md
-```
-
-## Demo Credentials
-
-For testing the admin panel:
-- **Email**: admin@school.com
-- **Password**: password123
-
-## Responsive Design
-
-The website is fully responsive and works on:
-- Desktop (1200px+)
-- Tablet (768px - 1199px)
-- Mobile (320px - 767px)
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## License
-
-MIT License - Feel free to use for your school project
-
-## Support
-
-For issues or questions, contact: support@brightfuture.edu
+For issues or questions:
+- Check [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+- Open an issue on GitHub
+- Contact: vishalsale802@gmail.com
 
 ---
 
-Built with ❤️ for education
+**Made with ❤️ for education**

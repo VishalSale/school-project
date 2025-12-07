@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .env
+.env.production
 PROJECT_SUMMARY.md
 QUICKSTART.md
 ADMIN_GUIDE.md

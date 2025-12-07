@@ -49,6 +49,42 @@
 
 .login-btn {
   margin-left: auto;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+}
+
+.login-btn:hover::before {
+  left: 100%;
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .nav a {
@@ -133,6 +169,11 @@
 
   .login-btn {
     margin-left: 0;
+    width: auto;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    justify-content: center;
   }
 }
 
@@ -149,7 +190,7 @@
   }
   
   .login-btn {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    padding: 8px 16px;
   }
 }

@@ -56,9 +56,9 @@ const Footer = () => {
             </div>
           </div>
         </div>
-
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} Bright Future School. All rights reserved.</p>
+          <a className="contact-item" href="https://vishalsale.github.io/About-Me/">Developed by Vishal</a>
           <div className="footer-links">
             <Link to="/privacy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>

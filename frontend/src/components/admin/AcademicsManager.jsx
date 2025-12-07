@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { useToast } from '../../context/ToastContext';
 import { Plus, Edit, Trash2, X, BookOpen, GraduationCap, Award } from 'lucide-react';
 
 const AcademicsManager = () => {
   const { academicsData, setAcademicsData } = useData();
+  const { showToast } = useToast();
   const [activeSection, setActiveSection] = useState('curriculum');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -54,11 +56,13 @@ const AcademicsManager = () => {
           item.id === editingId ? newItem : item
         )
       });
+      showToast('Item updated successfully!', 'success');
     } else {
       setAcademicsData({
         ...academicsData,
         [section]: [...academicsData[section], newItem]
       });
+      showToast('Item added successfully!', 'success');
     }
     
     resetForm();
@@ -98,6 +102,7 @@ const AcademicsManager = () => {
         ...academicsData,
         [section]: academicsData[section].filter(item => item.id !== id)
       });
+      showToast('Item deleted successfully!', 'success');
     }
   };
 

@@ -1,10 +1,22 @@
 .announcements-page {
   min-height: 100vh;
+  background: var(--light-color);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.announcements-page .section {
+  background: var(--light-color);
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .pinned-section,
 .regular-section {
   margin-bottom: 50px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .pinned-section h2,
@@ -15,18 +27,24 @@
   font-size: 1.8rem;
   margin-bottom: 30px;
   color: var(--dark-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .announcements-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(350px, 100%), 1fr));
   gap: 25px;
+  width: 100%;
 }
 
 .announcements-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .announcement-card {
@@ -36,6 +54,9 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border-left: 4px solid var(--primary-color);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .announcement-card.pinned {
@@ -91,6 +112,9 @@
   font-size: 1.4rem;
   margin-bottom: 12px;
   color: var(--dark-color);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .announcement-date {
@@ -109,10 +133,47 @@
 .announcement-card p {
   color: var(--text-color);
   line-height: 1.7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 @media (max-width: 768px) {
   .announcements-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .announcement-card {
+    padding: 20px;
+  }
+  
+  .pinned-section h2,
+  .regular-section h2 {
+    font-size: 1.4rem;
+    gap: 8px;
+  }
+  
+  .announcement-card h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-card {
+    padding: 15px;
+  }
+  
+  .pinned-section h2,
+  .regular-section h2 {
+    font-size: 1.2rem;
+    gap: 6px;
+  }
+  
+  .announcement-card h3 {
+    font-size: 1rem;
+  }
+  
+  .category-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
   }
 }

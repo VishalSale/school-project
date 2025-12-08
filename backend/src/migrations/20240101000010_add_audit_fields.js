@@ -1,362 +1,119 @@
-exports.up = function (knex) {
-  return Promise.all([
-    // Users table
-    knex.schema.table('users', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+exports.up = async function (knex) {
 
-    // Blog table
-    knex.schema.table('blog', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  // Helper: add audit fields + status
+  const addAuditFields = async (tableName, statusEnum, defaultStatus) => {
+    await knex.schema.table(tableName, (table) => {
+      table.integer('created_by_id').nullable()
+      table.string('created_by_name', 255).nullable()
+      table.string('created_by_ip', 45).nullable()
+      table.integer('updated_by_id').nullable()
+      table.string('updated_by_name', 255).nullable()
+      table.string('updated_by_ip', 45).nullable()
+    })
 
-    // Faculty table
-    knex.schema.table('faculty', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+    const hasStatus = await knex.schema.hasColumn(tableName, 'status')
 
-    // Gallery table
-    knex.schema.table('gallery', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+    if (hasStatus) {
+      await knex.schema.table(tableName, (table) => {
+        table.dropColumn('status')
+      })
+    }
 
-    // Announcements table
-    knex.schema.table('announcements', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+    await knex.schema.table(tableName, (table) => {
+      table
+        .enu('status', statusEnum)
+        .defaultTo(defaultStatus)
+    })
+  }
 
-    // Admission dates table
-    knex.schema.table('admission_dates', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  // Common status
+  const basicStatus = ['active', 'inactive', 'deleted']
 
-    // Admission documents table
-    knex.schema.table('admission_documents', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  // Tables with basic status
+  const basicTables = [
+    'users',
+    'blog',
+    'faculty',
+    'gallery',
+    'announcements',
+    'admission_dates',
+    'admission_documents',
+    'curriculum',
+    'class_structure',
+    'additional_programs',
+    'cbse_general_info',
+    'cbse_staff_details',
+    'cbse_fee_structure',
+    'cbse_documents',
+    'cbse_infrastructure'
+  ]
 
-    // Admission applications table
-    knex.schema.table('admission_applications', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      // Status already exists, just modify it
-      table.dropColumn('status');
-    }),
-    knex.schema.table('admission_applications', (table) => {
-      table.enum('status', ['active', 'inactive', 'deleted', 'pending', 'approved', 'rejected']).defaultTo('pending');
-    }),
+  for (const table of basicTables) {
+    await addAuditFields(table, basicStatus, 'active')
+  }
 
-    // Curriculum table
-    knex.schema.table('curriculum', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  // Admission Applications (extended status)
+  await addAuditFields(
+    'admission_applications',
+    ['active', 'inactive', 'deleted', 'pending', 'approved', 'rejected'],
+    'pending'
+  )
 
-    // Class structure table
-    knex.schema.table('class_structure', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  // Contact submissions (custom status)
+  await addAuditFields(
+    'contact_submissions',
+    ['active', 'inactive', 'deleted', 'unread', 'read', 'replied'],
+    'unread'
+  )
+}
 
-    // Additional programs table
-    knex.schema.table('additional_programs', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+exports.down = async function (knex) {
 
-    // CBSE general info table
-    knex.schema.table('cbse_general_info', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  const removeAuditFields = async (tableName, restoreStatus, defaultStatus) => {
+    await knex.schema.table(tableName, (table) => {
+      table.dropColumn('created_by_id')
+      table.dropColumn('created_by_name')
+      table.dropColumn('created_by_ip')
+      table.dropColumn('updated_by_id')
+      table.dropColumn('updated_by_name')
+      table.dropColumn('updated_by_ip')
+      table.dropColumn('status')
+    })
 
-    // CBSE staff details table
-    knex.schema.table('cbse_staff_details', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+    // Restore original status as string
+    await knex.schema.table(tableName, (table) => {
+      table.string('status', 50).defaultTo(defaultStatus)
+    })
+  }
 
-    // CBSE fee structure table
-    knex.schema.table('cbse_fee_structure', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  const allTables = [
+    'users',
+    'blog',
+    'faculty',
+    'gallery',
+    'announcements',
+    'admission_dates',
+    'admission_documents',
+    'curriculum',
+    'class_structure',
+    'additional_programs',
+    'cbse_general_info',
+    'cbse_staff_details',
+    'cbse_fee_structure',
+    'cbse_documents',
+    'cbse_infrastructure',
+    'admission_applications',
+    'contact_submissions'
+  ]
 
-    // CBSE documents table
-    knex.schema.table('cbse_documents', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
+  for (const table of allTables) {
+    const defaultStatus =
+      table === 'admission_applications'
+        ? 'pending'
+        : table === 'contact_submissions'
+        ? 'unread'
+        : 'active'
 
-    // CBSE infrastructure table
-    knex.schema.table('cbse_infrastructure', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      table.enum('status', ['active', 'inactive', 'deleted']).defaultTo('active');
-    }),
-
-    // Contact submissions table
-    knex.schema.table('contact_submissions', (table) => {
-      table.integer('created_by_id').unsigned().nullable();
-      table.string('created_by_name', 255).nullable();
-      table.string('created_by_ip', 45).nullable();
-      table.integer('updated_by_id').unsigned().nullable();
-      table.string('updated_by_name', 255).nullable();
-      table.string('updated_by_ip', 45).nullable();
-      // Status already exists, just modify it
-      table.dropColumn('status');
-    }),
-    knex.schema.table('contact_submissions', (table) => {
-      table.enum('status', ['active', 'inactive', 'deleted', 'unread', 'read', 'replied']).defaultTo('unread');
-    }),
-  ]);
-};
-
-exports.down = function (knex) {
-  return Promise.all([
-    knex.schema.table('users', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('blog', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('faculty', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('gallery', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('announcements', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('admission_dates', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('admission_documents', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('admission_applications', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('admission_applications', (table) => {
-      table.string('status', 50).defaultTo('pending');
-    }),
-    knex.schema.table('curriculum', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('class_structure', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('additional_programs', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('cbse_general_info', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('cbse_staff_details', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('cbse_fee_structure', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('cbse_documents', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('cbse_infrastructure', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('contact_submissions', (table) => {
-      table.dropColumn('created_by_id');
-      table.dropColumn('created_by_name');
-      table.dropColumn('created_by_ip');
-      table.dropColumn('updated_by_id');
-      table.dropColumn('updated_by_name');
-      table.dropColumn('updated_by_ip');
-      table.dropColumn('status');
-    }),
-    knex.schema.table('contact_submissions', (table) => {
-      table.string('status', 50).defaultTo('unread');
-    }),
-  ]);
-};
+    await removeAuditFields(table, true, defaultStatus)
+  }
+}

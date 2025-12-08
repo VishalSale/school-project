@@ -13,7 +13,7 @@ exports.seed = async function (knex) {
   // Insert admin user
   await knex('users').insert([
     {
-      email: 'admin@school.com',
+      email: 'admin@brightfutureschool.edu',
       password: hashedPassword,
       role: 'admin',
     },
@@ -25,8 +25,8 @@ exports.seed = async function (knex) {
       school_name: 'Bright Future School',
       affiliation_no: '1234567',
       school_code: '12345',
-      address: '123 Education Street, City, State - 12345',
-      principal_name: 'Dr. Sarah Johnson',
+      address: '123 Keshav nagar, Pune, Maharashtra-411004',
+      principal_name: 'Dr. Vishal Sale',
       principal_qualification: 'Ph.D. in Education',
       email: 'principal@brightfuture.edu',
       contact_number: '+91 123 456 7890',
@@ -37,11 +37,11 @@ exports.seed = async function (knex) {
   // Insert CBSE staff details (single row)
   await knex('cbse_staff_details').insert([
     {
-      total_teaching: 100,
+      total_teaching: 50,
       pgt: 25,
       tgt: 40,
       prt: 35,
-      non_teaching: 50,
+      non_teaching: 10,
     },
   ]);
 

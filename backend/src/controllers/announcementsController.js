@@ -3,9 +3,10 @@ const db = require('../config/database');
 const getAll = async (req, res, next) => {
   try {
     const announcements = await db('announcements')
+      .whereNot({ status: 'deleted' })
       .orderBy('is_pinned', 'desc')
       .orderBy('date', 'desc');
-    
+
     res.json({ success: true, data: announcements });
   } catch (error) {
     next(error);
@@ -37,6 +38,10 @@ const create = async (req, res, next) => {
       category,
       is_pinned: is_pinned || false,
       content,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newAnnouncement = await db('announcements').where({ id }).first();
@@ -68,6 +73,9 @@ const update = async (req, res, next) => {
       is_pinned,
       content,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedAnnouncement = await db('announcements').where({ id }).first();
@@ -91,7 +99,14 @@ const remove = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Announcement not found' });
     }
 
-    await db('announcements').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('announcements').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

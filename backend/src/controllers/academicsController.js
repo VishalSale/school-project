@@ -4,7 +4,9 @@ const db = require('../config/database');
 
 const getAllCurriculum = async (req, res, next) => {
   try {
-    const curriculum = await db('curriculum').orderBy('created_at', 'desc');
+    const curriculum = await db('curriculum')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     
     // Convert subjects string to array for frontend
     const formattedCurriculum = curriculum.map(item => ({
@@ -50,6 +52,10 @@ const createCurriculum = async (req, res, next) => {
       subjects: subjectsString,
       description,
       icon,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newItem = await db('curriculum').where({ id }).first();
@@ -88,6 +94,9 @@ const updateCurriculum = async (req, res, next) => {
       description,
       icon,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedItem = await db('curriculum').where({ id }).first();
@@ -114,7 +123,14 @@ const deleteCurriculum = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Curriculum not found' });
     }
 
-    await db('curriculum').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('curriculum').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -129,7 +145,9 @@ const deleteCurriculum = async (req, res, next) => {
 
 const getAllClassStructure = async (req, res, next) => {
   try {
-    const classStructure = await db('class_structure').orderBy('created_at', 'desc');
+    const classStructure = await db('class_structure')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: classStructure });
   } catch (error) {
     next(error);
@@ -159,6 +177,10 @@ const createClassStructure = async (req, res, next) => {
       level,
       grades,
       focus,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newItem = await db('class_structure').where({ id }).first();
@@ -188,6 +210,9 @@ const updateClassStructure = async (req, res, next) => {
       grades,
       focus,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedItem = await db('class_structure').where({ id }).first();
@@ -211,7 +236,14 @@ const deleteClassStructure = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Class structure not found' });
     }
 
-    await db('class_structure').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('class_structure').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -226,7 +258,9 @@ const deleteClassStructure = async (req, res, next) => {
 
 const getAllPrograms = async (req, res, next) => {
   try {
-    const programs = await db('additional_programs').orderBy('created_at', 'desc');
+    const programs = await db('additional_programs')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: programs });
   } catch (error) {
     next(error);
@@ -255,6 +289,10 @@ const createProgram = async (req, res, next) => {
     const [id] = await db('additional_programs').insert({
       title,
       description,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
     }).returning('id');
 
     const newProgram = await db('additional_programs').where({ id }).first();
@@ -283,6 +321,9 @@ const updateProgram = async (req, res, next) => {
       title,
       description,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedProgram = await db('additional_programs').where({ id }).first();
@@ -306,7 +347,14 @@ const deleteProgram = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Program not found' });
     }
 
-    await db('additional_programs').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('additional_programs').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

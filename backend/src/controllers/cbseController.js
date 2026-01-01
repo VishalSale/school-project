@@ -65,6 +65,9 @@ const updateGeneralInfo = async (req, res, next) => {
         contact_number,
         campus_area,
         updated_at: db.fn.now(),
+        updated_by_id: req.auditData?.updated_by_id,
+        updated_by_name: req.auditData?.updated_by_name,
+        updated_by_ip: req.auditData?.updated_by_ip,
       });
     } else {
       // Insert new
@@ -78,6 +81,10 @@ const updateGeneralInfo = async (req, res, next) => {
         email,
         contact_number,
         campus_area,
+        created_by_id: req.auditData?.created_by_id,
+        created_by_name: req.auditData?.created_by_name,
+        created_by_ip: req.auditData?.created_by_ip,
+        status: 'active',
       });
     }
 
@@ -119,6 +126,9 @@ const updateStaffDetails = async (req, res, next) => {
         prt,
         non_teaching,
         updated_at: db.fn.now(),
+        updated_by_id: req.auditData?.updated_by_id,
+        updated_by_name: req.auditData?.updated_by_name,
+        updated_by_ip: req.auditData?.updated_by_ip,
       });
     } else {
       await db('cbse_staff_details').insert({
@@ -127,6 +137,10 @@ const updateStaffDetails = async (req, res, next) => {
         tgt,
         prt,
         non_teaching,
+        created_by_id: req.auditData?.created_by_id,
+        created_by_name: req.auditData?.created_by_name,
+        created_by_ip: req.auditData?.created_by_ip,
+        status: 'active',
       });
     }
 
@@ -167,6 +181,9 @@ const updateFeeStructure = async (req, res, next) => {
         class_9_to_10,
         class_11_to_12,
         updated_at: db.fn.now(),
+        updated_by_id: req.auditData?.updated_by_id,
+        updated_by_name: req.auditData?.updated_by_name,
+        updated_by_ip: req.auditData?.updated_by_ip,
       });
     } else {
       await db('cbse_fee_structure').insert({
@@ -174,6 +191,10 @@ const updateFeeStructure = async (req, res, next) => {
         class_6_to_8,
         class_9_to_10,
         class_11_to_12,
+        created_by_id: req.auditData?.created_by_id,
+        created_by_name: req.auditData?.created_by_name,
+        created_by_ip: req.auditData?.created_by_ip,
+        status: 'active',
       });
     }
 
@@ -193,7 +214,9 @@ const updateFeeStructure = async (req, res, next) => {
 
 const getAllDocuments = async (req, res, next) => {
   try {
-    const documents = await db('cbse_documents').orderBy('created_at', 'desc');
+    const documents = await db('cbse_documents')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: documents });
   } catch (error) {
     next(error);
@@ -219,7 +242,14 @@ const createDocument = async (req, res, next) => {
   try {
     const { name, url } = req.body;
 
-    const [id] = await db('cbse_documents').insert({ name, url }).returning('id');
+    const [id] = await db('cbse_documents').insert({
+      name,
+      url,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
+    }).returning('id');
     const newDocument = await db('cbse_documents').where({ id }).first();
 
     res.status(201).json({
@@ -246,6 +276,9 @@ const updateDocument = async (req, res, next) => {
       name,
       url,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedDocument = await db('cbse_documents').where({ id }).first();
@@ -269,7 +302,14 @@ const deleteDocument = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }
 
-    await db('cbse_documents').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('cbse_documents').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -284,7 +324,9 @@ const deleteDocument = async (req, res, next) => {
 
 const getAllInfrastructure = async (req, res, next) => {
   try {
-    const infrastructure = await db('cbse_infrastructure').orderBy('created_at', 'desc');
+    const infrastructure = await db('cbse_infrastructure')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: infrastructure });
   } catch (error) {
     next(error);
@@ -310,7 +352,14 @@ const createInfrastructure = async (req, res, next) => {
   try {
     const { item, value } = req.body;
 
-    const [id] = await db('cbse_infrastructure').insert({ item, value }).returning('id');
+    const [id] = await db('cbse_infrastructure').insert({
+      item,
+      value,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
+    }).returning('id');
     const newItem = await db('cbse_infrastructure').where({ id }).first();
 
     res.status(201).json({
@@ -337,6 +386,9 @@ const updateInfrastructure = async (req, res, next) => {
       item,
       value,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedItem = await db('cbse_infrastructure').where({ id }).first();
@@ -360,7 +412,14 @@ const deleteInfrastructure = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Infrastructure item not found' });
     }
 
-    await db('cbse_infrastructure').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('cbse_infrastructure').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -378,8 +437,12 @@ const getAllCBSEData = async (req, res, next) => {
     const generalInfo = await db('cbse_general_info').first();
     const staffDetails = await db('cbse_staff_details').first();
     const feeStructure = await db('cbse_fee_structure').first();
-    const documents = await db('cbse_documents').orderBy('created_at', 'desc');
-    const infrastructure = await db('cbse_infrastructure').orderBy('created_at', 'desc');
+    const documents = await db('cbse_documents')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
+    const infrastructure = await db('cbse_infrastructure')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
 
     res.json({
       success: true,

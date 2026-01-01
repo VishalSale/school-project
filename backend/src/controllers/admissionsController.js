@@ -4,7 +4,9 @@ const db = require('../config/database');
 
 const getAllDates = async (req, res, next) => {
   try {
-    const dates = await db('admission_dates').orderBy('date', 'asc');
+    const dates = await db('admission_dates')
+      .whereNot({ status: 'deleted' })
+      .orderBy('date', 'asc');
     res.json({ success: true, data: dates });
   } catch (error) {
     next(error);
@@ -15,7 +17,14 @@ const createDate = async (req, res, next) => {
   try {
     const { label, date } = req.body;
 
-    const [id] = await db('admission_dates').insert({ label, date }).returning('id');
+    const [id] = await db('admission_dates').insert({
+      label,
+      date,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
+    }).returning('id');
     const newDate = await db('admission_dates').where({ id }).first();
 
     res.status(201).json({
@@ -42,6 +51,9 @@ const updateDate = async (req, res, next) => {
       label,
       date,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedDate = await db('admission_dates').where({ id }).first();
@@ -65,7 +77,14 @@ const deleteDate = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Date not found' });
     }
 
-    await db('admission_dates').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('admission_dates').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -80,7 +99,9 @@ const deleteDate = async (req, res, next) => {
 
 const getAllDocuments = async (req, res, next) => {
   try {
-    const documents = await db('admission_documents').orderBy('created_at', 'desc');
+    const documents = await db('admission_documents')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
     res.json({ success: true, data: documents });
   } catch (error) {
     next(error);
@@ -91,7 +112,13 @@ const createDocument = async (req, res, next) => {
   try {
     const { name } = req.body;
 
-    const [id] = await db('admission_documents').insert({ name }).returning('id');
+    const [id] = await db('admission_documents').insert({
+      name,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
+    }).returning('id');
     const newDocument = await db('admission_documents').where({ id }).first();
 
     res.status(201).json({
@@ -117,6 +144,9 @@ const updateDocument = async (req, res, next) => {
     await db('admission_documents').where({ id }).update({
       name,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedDocument = await db('admission_documents').where({ id }).first();
@@ -140,7 +170,14 @@ const deleteDocument = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Document not found' });
     }
 
-    await db('admission_documents').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('admission_documents').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
@@ -156,9 +193,11 @@ const deleteDocument = async (req, res, next) => {
 const getAllApplications = async (req, res, next) => {
   try {
     const { status } = req.query;
-    let query = db('admission_applications').orderBy('created_at', 'desc');
+    let query = db('admission_applications')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
 
-    if (status) {
+    if (status && status !== 'deleted') {
       query = query.where({ status });
     }
 
@@ -209,6 +248,9 @@ const createApplication = async (req, res, next) => {
       parent_phone,
       address,
       status: 'pending',
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
     }).returning('id');
 
     const newApplication = await db('admission_applications').where({ id }).first();
@@ -236,6 +278,9 @@ const updateApplicationStatus = async (req, res, next) => {
     await db('admission_applications').where({ id }).update({
       status,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedApplication = await db('admission_applications').where({ id }).first();
@@ -259,7 +304,14 @@ const deleteApplication = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Application not found' });
     }
 
-    await db('admission_applications').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('admission_applications').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

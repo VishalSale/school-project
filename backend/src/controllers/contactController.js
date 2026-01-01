@@ -4,9 +4,11 @@ const db = require('../config/database');
 const getAllSubmissions = async (req, res, next) => {
   try {
     const { status } = req.query;
-    let query = db('contact_submissions').orderBy('created_at', 'desc');
+    let query = db('contact_submissions')
+      .whereNot({ status: 'deleted' })
+      .orderBy('created_at', 'desc');
 
-    if (status) {
+    if (status && status !== 'deleted') {
       query = query.where({ status });
     }
 
@@ -45,6 +47,9 @@ const createSubmission = async (req, res, next) => {
       subject,
       message,
       status: 'unread',
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
     }).returning('id');
 
     const newSubmission = await db('contact_submissions').where({ id }).first();
@@ -73,6 +78,9 @@ const updateSubmissionStatus = async (req, res, next) => {
     await db('contact_submissions').where({ id }).update({
       status,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedSubmission = await db('contact_submissions').where({ id }).first();
@@ -97,7 +105,14 @@ const deleteSubmission = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Submission not found' });
     }
 
-    await db('contact_submissions').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('contact_submissions').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

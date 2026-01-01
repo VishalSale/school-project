@@ -56,28 +56,26 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      {!isMobileMenuOpen && (
-        <button 
-          className="mobile-menu-toggle"
-          onClick={() => setIsMobileMenuOpen(true)}
-        >
-          <Menu size={24} />
-          <span>Menu</span>
-        </button>
-      )}
-
-      {isMobileMenuOpen && (
-        <button 
-          className="mobile-menu-close"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          <X size={24} />
-        </button>
-      )}
+      <button 
+        className="mobile-menu-toggle"
+        onClick={() => setIsMobileMenuOpen(true)}
+      >
+        <Menu size={24} />
+        <span>Menu</span>
+      </button>
 
       <div className={`admin-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
-          <h2>Admin Panel</h2>
+          <div className="sidebar-header-top">
+            <h2>Admin Panel</h2>
+            <button 
+              className="sidebar-close-btn"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <X size={24} />
+            </button>
+          </div>
           <p>{user?.email}</p>
         </div>
         <nav className="sidebar-nav">

@@ -18,6 +18,19 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.sidebar-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.sidebar-header-top h2 {
+  flex: 1;
+  margin: 0;
+}
+
 .sidebar-header h2 {
   color: white;
   margin-bottom: 0.25rem;
@@ -30,6 +43,24 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sidebar-close-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-nav {
@@ -534,7 +565,7 @@
     position: fixed;
     top: 1rem;
     left: 1rem;
-    z-index: 1001;
+    z-index: 999;
     background: var(--primary-color);
     color: white;
     border: none;
@@ -545,23 +576,8 @@
     font-weight: 600;
   }
 
-  .mobile-menu-close {
+  .sidebar-close-btn {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1001;
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    width: 50px;
-    height: 50px;
   }
 
   .admin-dashboard {

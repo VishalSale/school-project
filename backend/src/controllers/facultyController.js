@@ -74,6 +74,9 @@ const update = async (req, res, next) => {
       email,
       image,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedMember = await db('faculty').where({ id }).first();
@@ -98,7 +101,14 @@ const remove = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Faculty member not found' });
     }
 
-    await db('faculty').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('faculty').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,

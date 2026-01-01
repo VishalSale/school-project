@@ -3,7 +3,9 @@ const db = require('../config/database');
 const getAll = async (req, res, next) => {
   try {
     const { category } = req.query;
-    let query = db('gallery').orderBy('date', 'desc');
+    let query = db('gallery')
+      .whereNot({ status: 'deleted' })
+      .orderBy('date', 'desc');
     
     if (category && category !== 'all') {
       query = query.where({ category });
@@ -35,7 +37,16 @@ const create = async (req, res, next) => {
   try {
     const { category, title, url, date } = req.body;
 
-    const [id] = await db('gallery').insert({ category, title, url, date }).returning('id');
+    const [id] = await db('gallery').insert({
+      category,
+      title,
+      url,
+      date,
+      created_by_id: req.auditData?.created_by_id,
+      created_by_name: req.auditData?.created_by_name,
+      created_by_ip: req.auditData?.created_by_ip,
+      status: 'active',
+    }).returning('id');
     const newImage = await db('gallery').where({ id }).first();
 
     res.status(201).json({
@@ -64,6 +75,9 @@ const update = async (req, res, next) => {
       url,
       date,
       updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
     });
 
     const updatedImage = await db('gallery').where({ id }).first();
@@ -87,7 +101,14 @@ const remove = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Image not found' });
     }
 
-    await db('gallery').where({ id }).del();
+    // Soft delete - change status to 'deleted'
+    await db('gallery').where({ id }).update({
+      status: 'deleted',
+      updated_at: db.fn.now(),
+      updated_by_id: req.auditData?.updated_by_id,
+      updated_by_name: req.auditData?.updated_by_name,
+      updated_by_ip: req.auditData?.updated_by_ip,
+    });
 
     res.json({
       success: true,
